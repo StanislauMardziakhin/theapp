@@ -195,3 +195,4 @@ C:\Users\mardz\TheApp\obj\Debug\net9.0\TheApp.genruntimeconfig.cache
 C:\Users\mardz\TheApp\obj\Debug\net9.0\ref\TheApp.dll
 C:\Users\mardz\TheApp\obj\Debug\net9.0\compressed\p9meetuqpn-ljq60w5s4q.gz
 C:\Users\mardz\TheApp\obj\Debug\net9.0\compressed\lenn3nza6w-vo0ovhpj1m.gz
+C:\Users\mardz\TheApp\obj\Debug\net9.0\TheApp.sourcelink.json

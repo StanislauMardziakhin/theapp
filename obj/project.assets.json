@@ -735,10 +735,11 @@
           "buildTransitive/Mono.TextTemplating.targets": {}
         }
       },
-      "Npgsql/9.0.3": {
+      "Npgsql/9.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.2"
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.2",
+          "System.Text.Json": "9.0.0"
         },
         "compile": {
           "lib/net8.0/Npgsql.dll": {
@@ -751,12 +752,12 @@
           }
         }
       },
-      "Npgsql.EntityFrameworkCore.PostgreSQL/9.0.4": {
+      "Npgsql.EntityFrameworkCore.PostgreSQL/9.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "[9.0.1, 10.0.0)",
-          "Microsoft.EntityFrameworkCore.Relational": "[9.0.1, 10.0.0)",
-          "Npgsql": "9.0.3"
+          "Microsoft.EntityFrameworkCore": "[9.0.0, 10.0.0)",
+          "Microsoft.EntityFrameworkCore.Relational": "[9.0.0, 10.0.0)",
+          "Npgsql": "9.0.0"
         },
         "compile": {
           "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
@@ -965,7 +966,7 @@
       "System.Text.Json/9.0.5": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net9.0/System.Text.Json.dll": {
             "related": ".xml"
           }
         },
@@ -2527,10 +2528,10 @@
         "readme.md"
       ]
     },
-    "Npgsql/9.0.3": {
-      "sha512": "tPvY61CxOAWxNsKLEBg+oR646X4Bc8UmyQ/tJszL/7mEmIXQnnBhVJZrZEEUv0Bstu0mEsHZD5At3EO8zQRAYw==",
+    "Npgsql/9.0.0": {
+      "sha512": "zu1nCRt0gWP/GR0reYgg0Bl5o8qyNV7mVAgzAbVLRiAd1CYXcf/9nrubPH0mt93u8iGTKmYqWaLVECEAcE6IfQ==",
       "type": "package",
-      "path": "npgsql/9.0.3",
+      "path": "npgsql/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2539,22 +2540,22 @@
         "lib/net6.0/Npgsql.xml",
         "lib/net8.0/Npgsql.dll",
         "lib/net8.0/Npgsql.xml",
-        "npgsql.9.0.3.nupkg.sha512",
+        "npgsql.9.0.0.nupkg.sha512",
         "npgsql.nuspec",
         "postgresql.png"
       ]
     },
-    "Npgsql.EntityFrameworkCore.PostgreSQL/9.0.4": {
-      "sha512": "mw5vcY2IEc7L+IeGrxpp/J5OSnCcjkjAgJYCm/eD52wpZze8zsSifdqV7zXslSMmfJG2iIUGZyo3KuDtEFKwMQ==",
+    "Npgsql.EntityFrameworkCore.PostgreSQL/9.0.0": {
+      "sha512": "ObngKFRLMBAeMqQzK7SC0Q6WZtWw0imPmEkVPo12yLVF3fioz2TN+w0mhNMJ5cVd/sLB2u+jei0bmA9sDMtkMw==",
       "type": "package",
-      "path": "npgsql.entityframeworkcore.postgresql/9.0.4",
+      "path": "npgsql.entityframeworkcore.postgresql/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
         "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll",
         "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.xml",
-        "npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+        "npgsql.entityframeworkcore.postgresql.9.0.0.nupkg.sha512",
         "npgsql.entityframeworkcore.postgresql.nuspec",
         "postgresql.png"
       ]
@@ -2952,7 +2953,7 @@
     "net9.0": [
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 9.0.5",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.5",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.4"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 9.0.0"
     ]
   },
   "packageFolders": {
@@ -3010,7 +3011,7 @@
           },
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
-            "version": "[9.0.4, )"
+            "version": "[9.0.0, )"
           }
         },
         "imports": [

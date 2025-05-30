@@ -12,8 +12,8 @@ using TheApp.Models;
 namespace TheApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250527164052_AddNameToUser")]
-    partial class AddNameToUser
+    [Migration("20250530171828_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
