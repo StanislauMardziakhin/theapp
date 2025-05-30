@@ -1,0 +1,331 @@
+﻿@model List<TheApp.ViewModels.UserListViewModel>
+@using TheApp.Constants
+@using System.Text.Json
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "User Management";
+    var messages = new
+    {
+        Messages.Users.SelectAtLeastOneUser,
+        Messages.Users.SelfBlockRedirect,
+        Messages.Users.InvalidUserData,
+        Messages.Users.NoUsersFound,
+        Messages.Users.TableUpdateError,
+        Messages.Users.UsersLoadError,
+        Messages.Users.UsersBlocked,
+        Messages.Users.UsersUnblocked,
+        Messages.Users.UsersDeleted,
+        DefaultError = Messages.Common.Error
+    };
+}
+
+<h2 class="text-center mb-4">User Management</h2>
+
+<form asp-action="Action" method="post" id="usersForm">
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10 col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="btn-group" role="group">
+                                <button type="submit" name="Action" value="Block" class="btn btn-outline-danger">Block
+                                    selected users
+                                </button>
+                                <button type="submit" name="Action" value="Unblock" class="btn btn-outline-success"
+                                        title="Unblock selected users">
+                                    <i class="bi bi-unlock"></i>
+                                </button>
+                                <button type="submit" name="Action" value="Delete" class="btn btn-outline-danger"
+                                        title="Delete selected users">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div id="custom-search-container"></div>
+                        </div>
+                        <div class="table-container">
+                            <table id="usersTable" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="col-checkbox">
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" id="selectAll" class="align-middle"/>
+                                        </div>
+                                    </th>
+                                    <th class="col-name">Name</th>
+                                    <th class="col-email">Email</th>
+                                    <th class="col-last-seen">Last seen</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr data-is-blocked="@user.IsBlocked.ToString().ToLower()">
+                                        <td><input type="checkbox" name="UserIds" value="@user.Id"
+                                                   class="user-checkbox align-middle"/></td>
+                                        <td>@(ViewBag.CurrentUserId == user.Id ? Html.Raw("<strong>" + (user.Name ?? "N/A") + "</strong>") : user.Name ?? "N/A")</td>
+                                        <td>@user.Email</td>
+                                        <td>@(user.LastLoginTime.HasValue ? user.LastLoginTime.Value.ToString("g", CultureInfo.InvariantCulture) : "Never")</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    tr[data-is-blocked="true"] td:nth-child(2) {
+        text-decoration: line-through;
+    }
+
+    tr[data-is-blocked="true"] td:nth-child(3),
+    tr[data-is-blocked="true"] td:nth-child(4) {
+        color: #d3d3d3;
+    }
+
+    #custom-search-container input[type="search"] {
+        width: 200px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .table {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        white-space: normal;
+        word-wrap: break-word;
+        vertical-align: middle;
+    }
+
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .checkbox-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .col-checkbox {
+        width: 50px;
+        text-align: center;
+        padding: 0.5rem !important;
+    }
+
+    .col-checkbox input[type="checkbox"] {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .col-name {
+        width: 150px;
+    }
+
+    .col-email {
+        width: 200px;
+    }
+
+    .col-last-seen {
+        width: 150px;
+    }
+
+    .table td:first-child {
+        text-align: center;
+    }
+
+    .user-checkbox {
+        margin: 0 auto;
+        display: block;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        var Messages = @Html.Raw(JsonSerializer.Serialize(messages));
+        var currentUserId = '@ViewBag.CurrentUserId';
+
+        $(document).ready(function () {
+            var table = $('#usersTable').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/en-GB.json'
+                },
+                deferRender: true,
+                ordering: true,
+                order: [[3, 'desc']],
+                columnDefs: [
+                    {orderable: false, targets: [0, 1, 2]},
+                    {orderable: true, targets: 3},
+                    {data: 'checkbox', targets: 0},
+                    {
+                        data: 'name',
+                        targets: 1,
+                        render: function (data, type, row) {
+                            return row.id === currentUserId ? '<strong>' + (data || 'N/A') + '</strong>' : (data || 'N/A');
+                        }
+                    },
+                    {data: 'email', targets: 2},
+                    {data: 'lastSeen', targets: 3}
+                ],
+                paging: false,
+                info: false,
+                searching: true,
+                initComplete: function () {
+                    const filterLabel = $('#usersTable_filter label');
+                    const searchInput = filterLabel.find('input');
+
+                    filterLabel.contents().first().remove();
+                    searchInput.attr('placeholder', 'Filter');
+
+                    $('#custom-search-container').empty().append(filterLabel);
+                    $('#usersTable_filter').remove();
+
+                    bindCheckboxEvents();
+                }
+            });
+
+            function bindCheckboxEvents() {
+                $('#selectAll').off('click').on('click', function () {
+                    $('.user-checkbox').prop('checked', this.checked);
+                });
+
+                $(document).off('change', '.user-checkbox').on('change', '.user-checkbox', function () {
+                    $('#selectAll').prop('checked', $('.user-checkbox').length === $('.user-checkbox:checked').length);
+                });
+            }
+
+            $('#usersForm').on('submit', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var actionValue = form.find('button[type="submit"]:focus').val();
+                var userIds = $('.user-checkbox:checked').map(function () {
+                    return this.value;
+                }).get();
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                if (userIds.length === 0) {
+                    toastr.warning(Messages.SelectAtLeastOneUser, '', {timeOut: 3000});
+                    return;
+                }
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: {
+                        Action: actionValue,
+                        UserIds: userIds,
+                        __RequestVerificationToken: token
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.redirectTo) {
+                                toastr.success(Messages.SelfBlockRedirect, '', {timeOut: 2000});
+                                setTimeout(function () {
+                                    window.location.href = response.redirectTo;
+                                }, 2000);
+                            } else {
+                                toastr.success(
+                                    actionValue === "Block" ? Messages.UsersBlocked :
+                                        actionValue === "Unblock" ? Messages.UsersUnblocked :
+                                            Messages.UsersDeleted,
+                                    '', {timeOut: 3000}
+                                );
+                                refreshTable();
+                            }
+                        } else {
+                            toastr.error(response.message || Messages.DefaultError, '', {timeOut: 3000});
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.error(xhr.responseJSON?.message || Messages.DefaultError, '', {timeOut: 3000});
+                    }
+                });
+            });
+
+            function refreshTable() {
+                $.ajax({
+                    url: '/Users/GetUsers',
+                    type: 'GET',
+                    cache: false,
+                    success: function (users) {
+                        if (!users || !Array.isArray(users)) {
+                            toastr.error(Messages.InvalidUserData, '', {timeOut: 3000});
+                            return;
+                        }
+
+                        if (users.length === 0) {
+                            toastr.warning(Messages.NoUsersFound, '', {timeOut: 3000});
+                            table.clear().draw();
+                            return;
+                        }
+
+                        try {
+                            table.clear();
+                            users.forEach(function (user) {
+                                if (!user || typeof user !== 'object' || !user.id || !user.email) {
+                                    return;
+                                }
+                                table.row.add({
+                                    checkbox: '<input type="checkbox" name="UserIds" value="' + $('<div>').text(user.id).html() + '" class="user-checkbox align-middle" />',
+                                    name: user.id === currentUserId ? '<strong>' + (user.name || 'N/A') + '</strong>' : (user.name || 'N/A'),
+                                    email: user.email || '',
+                                    lastSeen: user.lastLoginTime ? (new Date(user.lastLoginTime).toLocaleString('en-US') || 'Invalid date') : 'Never',
+                                    isBlocked: user.isBlocked
+                                });
+                            });
+                            table.draw();
+                            table.rows().nodes().to$().each(function () {
+                                $(this).attr('data-is-blocked', table.row(this).data().isBlocked.toString().toLowerCase());
+                            });
+
+                            bindCheckboxEvents();
+                        } catch (e) {
+                            toastr.error(Messages.TableUpdateError, '', {timeOut: 3000});
+                        }
+                    },
+                    error: function () {
+                        toastr.error(Messages.UsersLoadError, '', {timeOut: 3000});
+                    }
+                });
+            }
+        });
+    </script>
+}

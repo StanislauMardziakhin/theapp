@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container-fluid p-0">
+    <div class="welcome-section">
+        <h1 class="text-center mb-4 text-white">Welcome to TheApp!</h1>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <div class="text-center">
+                <a href="/Users" class="btn btn-custom">User management</a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .welcome-section {
+        padding-top: 80px;
+    }
+
+    .btn-custom {
+        background-color: #ffffff;
+        color: #000000;
+        border: 2px solid #ffffff;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: #ffffff;
+        border: 2px solid #ffffff;
+    }
+</style>
